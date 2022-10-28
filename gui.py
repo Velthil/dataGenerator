@@ -14,4 +14,4 @@ class Gui(tk.Tk):
         var = tk.IntVar()
         self.chk = tk.Checkbutton(self, text='krwiodawcy', font=('Arial', 16))
         self.chk.grid(row=1, column=1)
-len
+
