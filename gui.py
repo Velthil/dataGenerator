@@ -1,5 +1,7 @@
 import tkinter as tk
-
+from tkinter import messagebox
+import oracleDBconn
+import dataGen
 
 class Gui(tk.Tk):
 
@@ -12,14 +14,14 @@ class Gui(tk.Tk):
         self.label1.grid(row=0, column=0)
 
         self.tabele = ['Krwiodawcy', 'Dyskwalifikacje', 'Oddzial_RCKiK', 'Miasta', 'Pracownicy', 'Oddzial_terenowy',
-                       'Pobrania', 'Krew', 'Wyniki_badan', 'Wydania_krwi', 'Jednostki_docelowe']
+                       'Pobrania + Krew', 'Wyniki_badan', 'Wydania_krwi', 'Jednostki_docelowe']
         self.var = []
         self.chkb = []
 
         for i in range(len(self.tabele)):
             self.var.append(tk.IntVar())
             self.chkb.append(tk.Checkbutton(self, text=self.tabele[i], font=('Arial', 16), variable=self.var[i]))
-            self.chkb[i].grid(row=(i+1), column=0, sticky='W')
+            self.chkb[i].grid(row=(i + 1), column=0, sticky='W')
 
         self.label1 = tk.Label(self, text='Liczba wpisów do wybranych tabel:', font=('Arial', 18))
         self.label1.grid(row=0, column=2, columnspan=2)
@@ -33,6 +35,29 @@ class Gui(tk.Tk):
         self.butc.grid(row=9, column=3, rowspan=4, sticky='NEWS')
 
     def buttonAdd(self):
-        print("dziala")
+        try:
+            num = int(self.ent.get())
+        except:
+            messagebox.showerror('Błąd', 'Podano nieprawidłową wartość')
+            return
 
+        conn = oracleDBconn.DbConnection()
 
+        vartab = []
+        for i in range(len(self.var)):
+            vartab.append(self.var[i].get())
+        gen = dataGen.generator()
+        print(vartab)
+        for i in range(len(self.var)):
+            if vartab[i] == 0:
+                continue
+            dataSet = gen.get(i, num)
+            if dataSet == 0:
+                continue
+            else:
+                print(dataSet)
+                # sqlSet = xxx.xxx(self.tabele[i], dataSet)
+                # for sql in sqlSet:
+                #     conn.execute(sql)
+        conn.commit()
+        del conn

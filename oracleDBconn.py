@@ -5,6 +5,7 @@ class DbConnection:
     def __init__(self):
         self._conn = cx_Oracle.connect('SYSTEM/Traktor0@localhost')
         self._cursor = self._conn.cursor()
+        print('DB connected')
 
     def __del__(self):
         self._cursor.close()
