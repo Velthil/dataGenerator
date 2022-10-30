@@ -68,8 +68,25 @@ class generator:
 
     # Dyskwalifikacje
     def gen1(self, num):
-        print('Dyskwalifikacje')
-        return 0
+        conn = oracleDBconn.DbConnection()
+        conn.execute('SELECT id FROM krwiodawcy')
+        idKrwio = conn.getData()
+        del conn
+
+        result = []
+
+        for i in range(num):
+            date = self.genDate('-30y', '+1y')
+            test = random.randrange(10)
+            if test == 0:
+                result.append([str(random.choice(idKrwio)), (str(date[2]) + '/' + str(date[1]) + '/' + str(date[0])),
+                               'Tu opis...', 'NULL'])
+            else:
+                endYear = str(int(date[0]) + 1)
+                result.append([str(random.choice(idKrwio)), (str(date[2]) + '/' + str(date[1]) + '/' + str(date[0])),
+                               'Tu opis...', (str(date[2]) + '/' + str(date[1]) + '/' + endYear)])
+
+        return result
 
     # Miasta
     def gen2(self, num):

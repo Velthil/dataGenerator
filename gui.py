@@ -59,7 +59,6 @@ class Gui(tk.Tk):
             if dataSet == 0:
                 continue
             else:
-                print(dataSet)
                 sqlSet = sqlStringBuild.genSQl(i, dataSet)
                 for sql in sqlSet:
                     print('sql:', sql)
