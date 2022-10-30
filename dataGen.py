@@ -237,8 +237,13 @@ class generator:
 
     # Jednostki_docelowe
     def gen9(self, num):
-        print('Jednostki_docelowe')
-        return 0
+        result = []
+        fake = Faker('pl_PL')
+        for i in range(num):
+            name = 'Szpital ' + fake.city()
+            result.append([name])
+
+        return result
 
     def toList(self, data):
         result = []

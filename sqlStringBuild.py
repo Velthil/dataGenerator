@@ -100,11 +100,10 @@ def genSQl(set, data):
             sqlSet.append(sqlCommand)
         return sqlSet
 
+    #   Jednostki_docelowe
     elif set == 9:
-        return 0
-
-
-
-
-
-
+        fields = '(nazwa) '
+        for i in range(len(data)):
+            sqlCommand = ins + tables[set] + " " + fields + val + "('" + data[i][0] + "')"
+            sqlSet.append(sqlCommand)
+        return sqlSet
