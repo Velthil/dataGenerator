@@ -65,5 +65,16 @@ class Gui(tk.Tk):
                     conn.execute(sql)
                     noOfIns[i] += 1
         conn.commit()
+        noOfIns[6] /= 2
+        noOfIns[8] /= 2
+
+        info = 'Do tabel dodano: \n'
+        for i in range(len(noOfIns)):
+            if noOfIns[i] != 0:
+                info += self.tabele[i] + ' - ' + str(int(noOfIns[i])) + ' wpisów\n'
+        if noOfIns[8] != 0:
+            info += '\n\nW tabeli Krew zaktualizowano - ' + str(int(noOfIns[8])) + ' wpisów\n'
+        messagebox.showinfo('Podsumowanie', info)
+
         print('Dodano wierszy:', noOfIns)
         del conn
