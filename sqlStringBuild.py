@@ -1,4 +1,3 @@
-import oracleDBconn
 
 def genSQl(set, data):
     ins = 'INSERT INTO '
@@ -6,11 +5,11 @@ def genSQl(set, data):
     tables = ['Krwiodawcy', 'Dyskwalifikacje', 'Miasta', 'Oddzial_RCKiK', 'Pracownicy', 'Oddzial_terenowy',
               'Pobrania', 'Wyniki_badan', 'Wydania_krwi', 'Jednostki_docelowe']
     table = tables[set]
+    sqlSet = []
 
     #   Krwiodawcy
     if set == 0:
         fields = '(oddzial_rckik_id, grupy_krwi_id, imie, nazwisko, data_urodzenia, pesel, plec) '
-        sqlSet = []
         for i in range(len(data)):
             sqlCommand = ins + tables[set] + " " + fields + val + "('" + data[i][0] + "', '" + data[i][1] + "', '" + \
                          data[i][2] + "', '" + data[i][3] + "', TO_DATE('" + data[i][4] + "', 'DD/MM/YYYY'), '" + \
@@ -21,7 +20,6 @@ def genSQl(set, data):
     #   Dyskwalifikacje
     elif set == 1:
         fields = '(krwiodawcy_id, data, opis_przyczyn, data_koncowa) '
-        sqlSet = []
         for i in range(len(data)):
             sqlCommand = ins + tables[set] + " " + fields + val + "('" + data[i][0] +\
                          "', TO_DATE('" + data[i][1] + "', 'DD/MM/YYYY'), '" + data[i][2] +\
@@ -32,17 +30,27 @@ def genSQl(set, data):
     #   Miasta
     elif set == 2:
         fields = '(miasto, kod_pocztowy) '
-        sqlSet = []
         for i in range(len(data)):
             sqlCommand = ins + tables[set] + " " + fields + val + "('" + data[i][1] + "', '" + data[i][0] + "')"
             sqlSet.append(sqlCommand)
         return sqlSet
 
+    #   Oddzial_RCKiK
     elif set == 3:
-        return 0
+        fields = '(adres, miasto_id) '
+        for i in range(len(data)):
+            sqlCommand = ins + tables[set] + " " + fields + val + "('" + str(data[i][0]) + "', '" + str(data[i][1]) + "')"
+            sqlSet.append(sqlCommand)
+        return sqlSet
 
+    #   Pracownicy
     elif set == 4:
-        return 0
+        fields = '(imie, nazwisko, oddzial_rckik_id) '
+        for i in range(len(data)):
+            sqlCommand = ins + tables[set] + " " + fields + val + "('" + str(data[i][0]) + "', '" + \
+                         str(data[i][1]) + "', '" + str(data[i][2]) + "')"
+            sqlSet.append(sqlCommand)
+        return sqlSet
 
     elif set == 5:
         return 0

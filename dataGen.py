@@ -115,14 +115,45 @@ class generator:
 
     # Oddzial_RCKiK
     def gen3(self, num):
-        print('Oddzial_RCKiK')
-        return 0
+        conn = oracleDBconn.DbConnection()
+        conn.execute('SELECT id FROM miasta')
+        idCities = conn.getData()
+        del conn
+
+        result = []
+        fake = Faker('pl_PL')
+
+        for i in range(num):
+            adress = fake.street_address()
+            result.append([adress, str(random.choice(idCities))])
+
+        return result
 
 
     # Pracownicy
     def gen4(self, num):
-        print('Pracownicy')
-        return 0
+        conn = oracleDBconn.DbConnection()
+        conn.execute('SELECT id FROM oddzial_rckik')
+        idOddzial = conn.getData()
+        del conn
+
+        result = []
+
+        for i in range(num):
+            plec = random.choice([0, 1])
+            if plec == 0:
+                with open(r'data/imionaM.txt', 'r', encoding='utf-8') as fp:
+                    fName = random.choice(fp.readlines())
+                with open(r'data/nazwiskaM.txt', 'r', encoding='utf-8') as fp:
+                    lName = random.choice(fp.readlines())
+            else:
+                with open(r'data/imionaK.txt', 'r', encoding='utf-8') as fp:
+                    fName = random.choice(fp.readlines())
+                with open(r'data/nazwiskaK.txt', 'r', encoding='utf-8') as fp:
+                    lName = random.choice(fp.readlines())
+            result.append([str(fName).strip(), str(lName).strip(), str(random.choice(idOddzial))])
+
+        return result
 
 
     # Oddzial_terenowy
