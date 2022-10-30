@@ -1,4 +1,5 @@
 import random
+import oracleDBconn
 
 class generator:
 
@@ -29,7 +30,13 @@ class generator:
 
     # Krwiodawcy
     def gen0(self, num):
-        print('Krwiodawcy')
+        conn = oracleDBconn.DbConnection()
+        conn.execute('SELECT kod_pocztowy FROM miasta')
+        isInDB = conn.getData()
+        del conn
+
+
+
         return 0
 
     # Dyskwalifikacje
@@ -37,27 +44,34 @@ class generator:
         print('Dyskwalifikacje')
         return 0
 
-
-    # Oddzial_RCKiK
-    def gen2(self, num):
-        print('Oddzial_RCKiK')
-        return 0
-
-
     # Miasta
-    def gen3(self, num):
-        print('Miasta')
+    def gen2(self, num):
+        conn = oracleDBconn.DbConnection()
+        conn.execute('SELECT kod_pocztowy FROM miasta')
+        isInDB = conn.getData()
+        del conn
+
         with open(r'data/kodyMiasta.txt', 'r', encoding='utf-8') as fp:
-            data = fp.readlines()
+            rawData = fp.readlines()
+
+        data = []
+        for row in rawData:
+            if str(row).split()[0] not in isInDB:
+                data.append(row)
+
         x = len(data)
         print('Dostępne miasta:', x)
-        list = random.choices(data, k=num)
-        print(list)
-        result = []
-        for i in range(len(list)):
-            result.append(str(list[i]).split())
-        print(result)
+        if x == 0:
+            return 0
+        elif x < num:
+            num = x;
 
+        result = self.toList(random.choices(data, k=num))
+        return result
+
+    # Oddzial_RCKiK
+    def gen3(self, num):
+        print('Oddzial_RCKiK')
         return 0
 
 
@@ -95,3 +109,10 @@ class generator:
     def gen9(self, num):
         print('Jednostki_docelowe')
         return 0
+
+    def toList(self, data):
+        result = []
+        for i in range(len(data)):
+            result.append(str(data[i]).split())
+        return result
+

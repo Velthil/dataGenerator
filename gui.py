@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import messagebox
 import oracleDBconn
 import dataGen
+import sqlStringBuild
 
 class Gui(tk.Tk):
 
@@ -13,7 +14,7 @@ class Gui(tk.Tk):
         self.label1 = tk.Label(self, text='Wybierz tabele:', font=('Arial', 18))
         self.label1.grid(row=0, column=0)
 
-        self.tabele = ['Krwiodawcy', 'Dyskwalifikacje', 'Oddzial_RCKiK', 'Miasta', 'Pracownicy', 'Oddzial_terenowy',
+        self.tabele = ['Krwiodawcy', 'Dyskwalifikacje', 'Miasta', 'Oddzial_RCKiK', 'Pracownicy', 'Oddzial_terenowy',
                        'Pobrania + Krew', 'Wyniki_badan', 'Wydania_krwi', 'Jednostki_docelowe']
         self.var = []
         self.chkb = []
@@ -48,16 +49,21 @@ class Gui(tk.Tk):
             vartab.append(self.var[i].get())
         gen = dataGen.generator()
         print(vartab)
+        noOfIns = vartab.copy()
         for i in range(len(self.var)):
             if vartab[i] == 0:
                 continue
+            noOfIns[i] -= 1
             dataSet = gen.get(i, num)
             if dataSet == 0:
                 continue
             else:
                 print(dataSet)
-                # sqlSet = xxx.xxx(self.tabele[i], dataSet)
-                # for sql in sqlSet:
-                #     conn.execute(sql)
+                sqlSet = sqlStringBuild.genSQl(i, dataSet)
+                print('sqlSet:', sqlSet)
+                for sql in sqlSet:
+                    conn.execute(sql)
+                    noOfIns[i] += 1
         conn.commit()
+        print('Dodano wierszy:', noOfIns)
         del conn
