@@ -52,15 +52,41 @@ def genSQl(set, data):
             sqlSet.append(sqlCommand)
         return sqlSet
 
+    #   Oddzial_terenowy
     elif set == 5:
-        return 0
+        fields = '(oddzial_rckik_id) '
+        for i in range(len(data)):
+            sqlCommand = ins + tables[set] + " " + fields + val + "('" + str(data[i]) + "')"
+            sqlSet.append(sqlCommand)
+        return sqlSet
 
+    #   Pobrania + Krew
     elif set == 6:
-        return 0
+        fields0 = '(oddzial_rckik_id, krwiodawcy_id, pracownicy_id, data) '
+        fields1 = '(pobrania_id, ilosc_ml, status, data_waznosci) '
+        table1 = 'Krew'
 
+        for i in range(len(data)):
+            if i % 2 == 0:
+                sqlCommand = ins + tables[set] + " " + fields0 + val + "('" + str(data[i][0]) + "', '" +\
+                             str(data[i][1]) + "', '" + str(data[i][2]) +\
+                             "', TO_DATE('" + data[i][3] + "', 'DD/MM/YYYY'))"
+                sqlSet.append(sqlCommand)
+            else:
+                sqlCommand = ins + table1 + " " + fields1 + val + "('" + str(data[i][0]) + "', '" + str(data[i][1]) + \
+                             "', '" + str(data[i][2]) + "', TO_DATE('" + data[i][3] + "', 'DD/MM/YYYY'))"
+                sqlSet.append(sqlCommand)
+
+        return sqlSet
+
+    #   Wyniki_badan
     elif set == 7:
-        table2 = ['Krew']
-        return 0
+        fields = '(krew_id, wynik_badania, opis_badania) '
+        for i in range(len(data)):
+            sqlCommand = ins + tables[set] + " " + fields + val + "('" + str(data[i][0]) + "', '" + str(data[i][1]) +\
+                         "', '" + str(data[i][2]) + "')"
+            sqlSet.append(sqlCommand)
+        return sqlSet
 
     elif set == 8:
         return 0

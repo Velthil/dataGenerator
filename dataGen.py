@@ -77,14 +77,9 @@ class generator:
 
         for i in range(num):
             date = self.genDate('-30y', '+1y')
-            test = random.randrange(10)
-            if test == 0:
-                result.append([str(random.choice(idKrwio)), (str(date[2]) + '/' + str(date[1]) + '/' + str(date[0])),
-                               'Tu opis...', 'NULL'])
-            else:
-                endYear = str(int(date[0]) + 1)
-                result.append([str(random.choice(idKrwio)), (str(date[2]) + '/' + str(date[1]) + '/' + str(date[0])),
-                               'Tu opis...', (str(date[2]) + '/' + str(date[1]) + '/' + endYear)])
+            endYear = str(int(date[0]) + 1)
+            result.append([str(random.choice(idKrwio)), (str(date[2]) + '/' + str(date[1]) + '/' + str(date[0])),
+                           'Tu opis...', (str(date[2]) + '/' + str(date[1]) + '/' + endYear)])
 
         return result
 
@@ -158,20 +153,63 @@ class generator:
 
     # Oddzial_terenowy
     def gen5(self, num):
-        print('Oddzial_terenowy')
-        return 0
+        conn = oracleDBconn.DbConnection()
+        conn.execute('SELECT id FROM oddzial_rckik')
+        idOddzial = conn.getData()
+        del conn
+
+        result = []
+
+        for i in range(num):
+            result.append(str(random.choice(idOddzial)))
+        return result
 
 
     # Pobrania + Krew
     def gen6(self, num):
-        print('Pobrania + Krew')
-        return 0
+        conn = oracleDBconn.DbConnection()
+        conn.execute('SELECT id FROM oddzial_rckik')
+        idOddzial = conn.getData()
+        conn.execute('SELECT id FROM krwiodawcy')
+        idKrwiodacy = conn.getData()
+        conn.execute('SELECT id FROM pracownicy')
+        idPracownicy = conn.getData()
+        conn.execute('SELECT MAX(id) FROM pobrania')
+        lastID = conn.getData()[0]
+        del conn
+
+        result = []
+
+        for i in range(num):
+            date = self.genDate('-20y', 'today')
+            result.append([str(random.choice(idOddzial)), str(random.choice(idKrwiodacy)),
+                           str(random.choice(idPracownicy)), (str(date[2]) + '/' + str(date[1]) + '/' + str(date[0]))])
+
+            lastID += 1
+            ml = random.randrange(150, 1000)
+            if ml > 450:
+                ml = 450
+            status = random.choice(['D', 'U', 'B'])
+            expYear = str(int(date[0]) + 1)
+            result.append([str(lastID), str(ml), status, (str(date[2]) + '/' + str(date[1]) + '/' + expYear)])
+
+        return result
 
 
     # Wyniki_badan
     def gen7(self, num):
-        print('Wyniki_badan')
-        return 0
+        conn = oracleDBconn.DbConnection()
+        conn.execute('SELECT id FROM krew')
+        idKrew = conn.getData()
+        del conn
+
+        result = []
+
+        for i in range(num):
+            desc = 'Opis badania w kartotece nr. ' + str(random.randrange(1000000))
+            result.append([str(random.choice(idKrew)), str(random.choice(['0', '1'])), desc])
+
+        return result
 
 
     # Wydania_krwi
