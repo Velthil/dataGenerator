@@ -88,8 +88,17 @@ def genSQl(set, data):
             sqlSet.append(sqlCommand)
         return sqlSet
 
+    #   Wydania_krwi
     elif set == 8:
-        return 0
+        fields = '(numer_wydania, data, jednostki_docelowe_id) '
+        for i in range(len(data)):
+            sqlCommand = ins + tables[set] + " " + fields + val + "('" + data[i][0] +\
+                         "', TO_DATE('" + data[i][1] + "', 'DD/MM/YYYY'), '" + data[i][2] + "')"
+            sqlSet.append(sqlCommand)
+
+            sqlCommand = "UPDATE krew SET wydania_krwi_id = " + data[i][3] + " WHERE id = " + data[i][4]
+            sqlSet.append(sqlCommand)
+        return sqlSet
 
     elif set == 9:
         return 0

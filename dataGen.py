@@ -214,8 +214,25 @@ class generator:
 
     # Wydania_krwi
     def gen8(self, num):
-        print('Wydania_krwi')
-        return 0
+        conn = oracleDBconn.DbConnection()
+        conn.execute('SELECT id FROM krew WHERE wydania_krwi_id IS NULL')
+        idKrew = conn.getData()
+        conn.execute('SELECT id FROM jednostki_docelowe')
+        idJednostki = conn.getData()
+        conn.execute('SELECT MAX(id) FROM wydania_krwi')
+        lastID = conn.getData()[0]
+        del conn
+
+        result = []
+
+        for i in range(num):
+            lastID += 1
+            date = self.genDate('-10y', 'today')
+            result.append([str(random.randrange(999999)), (str(date[2]) + '/' + str(date[1]) + '/' + str(date[0])),
+                           str(random.choice(idJednostki)).strip(), str(random.choice(idKrew)).strip(),
+                           str(lastID)])
+
+        return result
 
 
     # Jednostki_docelowe
