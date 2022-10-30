@@ -1,5 +1,7 @@
 import random
 import oracleDBconn
+import string
+from faker import Faker
 
 class generator:
 
@@ -31,13 +33,38 @@ class generator:
     # Krwiodawcy
     def gen0(self, num):
         conn = oracleDBconn.DbConnection()
-        conn.execute('SELECT kod_pocztowy FROM miasta')
+        conn.execute('SELECT pesel FROM krwiodawcy')
         isInDB = conn.getData()
+        conn.execute('SELECT id FROM oddzial_rckik')
+        idRckik = conn.getData()
+        conn.execute('SELECT id FROM grupy_krwi')
+        idGrupy = conn.getData()
         del conn
 
-
-
-        return 0
+        result = []
+        pesele = []
+        for i in range(num):
+            bDate = self.genDate('-65y', '-16y')
+            plec = random.choice(['M', 'K'])
+            pesel = str(bDate[0])[-2:] + str(bDate[1]) + str(bDate[2])
+            while True:
+                pesel += ''.join(random.choice(string.digits) for _ in range(5))
+                if pesel not in isInDB or pesele:
+                    pesele.append(pesel)
+                    break
+            if plec == 'M':
+                with open(r'data/imionaM.txt', 'r', encoding='utf-8') as fp:
+                    fName = random.choice(fp.readlines())
+                with open(r'data/nazwiskaM.txt', 'r', encoding='utf-8') as fp:
+                    lName = random.choice(fp.readlines())
+            else:
+                with open(r'data/imionaK.txt', 'r', encoding='utf-8') as fp:
+                    fName = random.choice(fp.readlines())
+                with open(r'data/nazwiskaK.txt', 'r', encoding='utf-8') as fp:
+                    lName = random.choice(fp.readlines())
+            result.append([str(random.choice(idRckik)), str(random.choice(idGrupy)), str(fName).strip(), str(lName).strip(),
+                         (str(bDate[2]) + '/' + str(bDate[1]) + '/' + str(bDate[0])), pesel, plec])
+        return result
 
     # Dyskwalifikacje
     def gen1(self, num):
@@ -64,7 +91,7 @@ class generator:
         if x == 0:
             return 0
         elif x < num:
-            num = x;
+            num = x
 
         result = self.toList(random.choices(data, k=num))
         return result
@@ -116,3 +143,7 @@ class generator:
             result.append(str(data[i]).split())
         return result
 
+    def genDate(self, start, end):
+        fake = Faker()
+        result = str(fake.date_between(start_date=start, end_date=end))
+        return result.split('-')    #['YYYY', 'MM', 'DD']

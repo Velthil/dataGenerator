@@ -48,7 +48,8 @@ class Gui(tk.Tk):
         for i in range(len(self.var)):
             vartab.append(self.var[i].get())
         gen = dataGen.generator()
-        print(vartab)
+        print('Liczba wierszy do dodania:', num)
+        print('Do tabel:', vartab)
         noOfIns = vartab.copy()
         for i in range(len(self.var)):
             if vartab[i] == 0:
@@ -60,8 +61,8 @@ class Gui(tk.Tk):
             else:
                 print(dataSet)
                 sqlSet = sqlStringBuild.genSQl(i, dataSet)
-                print('sqlSet:', sqlSet)
                 for sql in sqlSet:
+                    print('sql:', sql)
                     conn.execute(sql)
                     noOfIns[i] += 1
         conn.commit()
