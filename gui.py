@@ -64,6 +64,7 @@ class Gui(tk.Tk):
                     print('sql:', sql)
                     conn.execute(sql)
                     noOfIns[i] += 1
+
         conn.commit()
         noOfIns[6] /= 2
         noOfIns[8] /= 2

@@ -96,7 +96,7 @@ def genSQl(set, data):
                          "', TO_DATE('" + data[i][1] + "', 'DD/MM/YYYY'), '" + data[i][2] + "')"
             sqlSet.append(sqlCommand)
 
-            sqlCommand = "UPDATE krew SET wydania_krwi_id = " + data[i][3] + " WHERE id = " + data[i][4]
+            sqlCommand = "UPDATE krew SET wydania_krwi_id = " + data[i][4] + " WHERE id = " + data[i][3]
             sqlSet.append(sqlCommand)
         return sqlSet
 
