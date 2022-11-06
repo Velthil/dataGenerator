@@ -3,7 +3,9 @@ import cx_Oracle
 
 class DbConnection:
     def __init__(self):
-        self._conn = cx_Oracle.connect('SYSTEM/Traktor0@localhost')
+        with open(r'dbcon', 'r', encoding='utf-8') as fp:
+            constr = fp.read()
+        self._conn = cx_Oracle.connect(constr)
         self._cursor = self._conn.cursor()
 
     def __del__(self):
